@@ -777,22 +777,34 @@ int profile_event_register(enum profile_type t, struct notifier_block *n)
 {
 	if (t == PROFILE_TASK_EXIT)
 		return blocking_notifier_chain_register(&task_exit_notifier, n);
+
 	return -ENOSYS;
 }
+
 int profile_event_unregister(enum profile_type t, struct notifier_block *n)
 {
 	if (t == PROFILE_TASK_EXIT)
 		return blocking_notifier_chain_unregister(&task_exit_notifier,
 							  n);
+<<<<<<< HEAD
 	return -ENOSYS;
 }
+=======
+
+	return -ENOSYS;
+}
+
+>>>>>>> 329710be8e38 (profiling: Implement a simple task exit notifier when disabled)
 void profile_task_exit(struct task_struct *tsk)
 {
 	blocking_notifier_call_chain(&task_exit_notifier, 0, tsk);
 }
 #endif
 
+<<<<<<< HEAD
 void dead_special_task(void);
+=======
+>>>>>>> 329710be8e38 (profiling: Implement a simple task exit notifier when disabled)
 void __noreturn do_exit(long code)
 {
 	struct task_struct *tsk = current;
