@@ -3314,8 +3314,8 @@ static void binder_transaction(struct binder_proc *proc,
 						ref->node, &target_proc,
 						&return_error);
 			} else {
-				binder_user_error("%d:%d(%s:%s) got transaction to invalid handle\n",
-						  proc->pid, thread->pid, proc->tsk->comm, thread->task->comm);
+				binder_user_error("%d:%d(%s:%s) got transaction to invalid handle, %u\n",
+						  proc->pid, thread->pid, proc->tsk->comm, thread->task->comm, tr->target.handle);
 				return_error = BR_FAILED_REPLY;
 			}
 			binder_proc_unlock(proc);
