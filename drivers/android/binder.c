@@ -207,7 +207,6 @@ enum binder_stat_types {
 
 struct binder_stats {
 	atomic_t br[_IOC_NR(BR_ONEWAY_SPAM_SUSPECT) + 1];
-	atomic_t br[_IOC_NR(BR_FROZEN_REPLY) + 1];
 	atomic_t bc[_IOC_NR(BC_REPLY_SG) + 1];
 	atomic_t obj_created[BINDER_STAT_COUNT];
 	atomic_t obj_deleted[BINDER_STAT_COUNT];
@@ -261,7 +260,7 @@ struct binder_work {
 	enum binder_work_type {
 		BINDER_WORK_TRANSACTION = 1,
 		BINDER_WORK_TRANSACTION_COMPLETE,
- 		BINDER_WORK_TRANSACTION_ONEWAY_SPAM_SUSPECT,
+		BINDER_WORK_TRANSACTION_ONEWAY_SPAM_SUSPECT,
 		BINDER_WORK_RETURN_ERROR,
 		BINDER_WORK_NODE,
 		BINDER_WORK_DEAD_BINDER,
@@ -5605,7 +5604,7 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		uint32_t enable;
 
 		if (copy_from_user(&enable, ubuf, sizeof(enable))) {
-			ret = -EFAULT;
+			ret = -EINVAL;
 			goto err;
 		}
 		binder_inner_proc_lock(proc);
