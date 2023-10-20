@@ -739,7 +739,7 @@ static int sugov_kthread_create(struct sugov_policy *sg_policy)
 		.sched_policy	= SCHED_FIFO,
 		.sched_flags	= SCHED_FLAG_SUGOV,
 		.sched_nice	= 0,
-		.sched_priority	= MAX_RT_PRIO / 4,
+		.sched_priority	= MAX_RT_PRIO - 1,
 		/*
 		 * Fake (unused) bandwidth; workaround to "fix"
 		 * priority inheritance.
