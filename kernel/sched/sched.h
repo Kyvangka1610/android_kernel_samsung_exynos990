@@ -89,6 +89,8 @@
 struct rq;
 struct cpuidle_state;
 
+#define CPU_NR		8
+
 /* task_struct::on_rq states: */
 #define TASK_ON_RQ_QUEUED	1
 #define TASK_ON_RQ_MIGRATING	2
