@@ -103,7 +103,7 @@ const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
  */
 int __weak arch_asym_cpu_priority(int cpu)
 {
-	return -arch_scale_cpu_capacity(cpu);
+	return -arch_scale_cpu_capacity(NULL, cpu);
 }
 #endif
 
