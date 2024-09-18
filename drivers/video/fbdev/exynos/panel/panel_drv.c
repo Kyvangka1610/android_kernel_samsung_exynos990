@@ -77,6 +77,10 @@ static char *panel_state_names[] = {
 	"LPM",		/* LPM */
 };
 
+#ifdef CONFIG_SUPPORT_DOZE
+extern int fix_green_screen;
+#endif
+
 /* panel workqueue */
 static char *panel_work_names[] = {
 	[PANEL_WORK_DISP_DET] = "disp-det",
@@ -3155,6 +3159,7 @@ static int panel_notify_frame_done_mafpc(struct panel_device *panel)
 static long panel_core_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg)
 {
 	int ret = 0;
+	int fix_green = 0;
 	struct panel_device *panel = container_of(sd, struct panel_device, sd);
 #ifdef CONFIG_SUPPORT_DSU
 	static int mres_updated_frame_cnt;
@@ -3279,6 +3284,8 @@ static long panel_core_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg
 					panel_state_names[panel->state.cur_state]);
 			ret = panel_display_on(panel);
 			panel_check_ready(panel);
+			if (!ret && panel->state.cur_state != PANEL_STATE_ALPM)
+				fix_green = 1;
 		}
 		if (unlikely(panel_get_gpio_irq(&panel->gpio[PANEL_GPIO_DISP_DET]) == false)) {
 #if defined(CONFIG_SEC_FACTORY) && defined(CONFIG_SUPPORT_FAST_DISCHARGE)
@@ -3298,6 +3305,26 @@ static long panel_core_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg
 		}
 
 		copr_update_start(&panel->copr, 3);
+
+#ifdef CONFIG_SUPPORT_DOZE
+		if (fix_green && fix_green_screen) {
+			ret = panel_doze(panel, PANEL_IOC_DOZE);
+			if (ret) {
+				panel_err("PANEL:ERR:%s:failed to enter alpm\n",
+					__func__);
+				break;
+			}
+			// sleep 126msec (ALPM spec)
+			usleep_range(126 * 1000, 126 * 1000 + 10);
+			ret = panel_sleep_out(panel);
+			if (ret) {
+				panel_err("PANEL:ERR:%s:failed to panel exit alpm\n",
+					__func__);
+				break;
+			}
+		}
+#endif
+
 #ifdef CONFIG_SUPPORT_DSU
 		if (panel->panel_data.props.mres_updated &&
 				(++mres_updated_frame_cnt > 1)) {
