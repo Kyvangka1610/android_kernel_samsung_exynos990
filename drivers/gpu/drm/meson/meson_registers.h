@@ -142,6 +142,9 @@
 #define VPP2_OSD_SCALE_COEF 0x19cd
 #define VPP2_INT_LINE_NUM 0x19ce
 
+/* osd1 HDR */
+#define OSD1_HDR2_CTRL 0x38a0
+
 /* viu */
 #define VIU_ADDR_START 0x1a00
 #define VIU_ADDR_END 0x1aff

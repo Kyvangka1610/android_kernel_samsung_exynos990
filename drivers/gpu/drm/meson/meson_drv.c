@@ -252,6 +252,10 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
 	drm->mode_config.funcs = &meson_mode_config_funcs;
 	drm->mode_config.helper_private	= &meson_mode_config_helpers;
 
+	/* undo settings made in vendor Uboot */
+
+    writel_bits_relaxed(15 << 13, 0, priv->io_base + _REG(OSD1_HDR2_CTRL)); // fixes green/pink color distortion - reg_only_mat must be 0
+
 	/* Hardware Initialization */
 
 	meson_vpu_init(priv);
