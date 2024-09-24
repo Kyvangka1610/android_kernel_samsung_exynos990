@@ -529,7 +529,6 @@ static int __init nosmp(char *str)
 
 early_param("nosmp", nosmp);
 
-#if NR_CPUS > BITS_PER_LONG
 /* this is hard limit */
 static int __init nrcpus(char *str)
 {
@@ -543,7 +542,6 @@ static int __init nrcpus(char *str)
 }
 
 early_param("nr_cpus", nrcpus);
-#endif
 
 static int __init maxcpus(char *str)
 {
@@ -556,31 +554,14 @@ static int __init maxcpus(char *str)
 
 early_param("maxcpus", maxcpus);
 
-static int __init boot_cpus(char *str)
-{
-	alloc_bootmem_cpumask_var(&boot_cpu_mask);
-	if (cpulist_parse(str, boot_cpu_mask) < 0) {
-		pr_warn("SMP: Incorrect boot_cpus cpumask\n");
-		return -EINVAL;
-	}
-	have_boot_cpu_mask = true;
-	return 0;
-}
-
-early_param("boot_cpus", boot_cpus);
-
-#if NR_CPUS > BITS_PER_LONG
 /* Setup number of possible processor ids */
 unsigned int nr_cpu_ids __read_mostly = NR_CPUS;
 EXPORT_SYMBOL(nr_cpu_ids);
-#endif
 
 /* An arch may set nr_cpu_ids earlier if needed, so this would be redundant */
 void __init setup_nr_cpu_ids(void)
 {
-#if NR_CPUS > BITS_PER_LONG
 	nr_cpu_ids = find_last_bit(cpumask_bits(cpu_possible_mask),NR_CPUS) + 1;
-#endif
 }
 
 /* Called by boot processor to activate the rest. */
