@@ -51,28 +51,6 @@ echo "Preparing the build environment..."
 pushd $(dirname "$0") > /dev/null
 CORES=`cat /proc/cpuinfo | grep -c processor`
 
-# Define toolchain variables
-CLANG_DIR=$PWD/toolchain/neutron_18
-PATH=$CLANG_DIR/bin:$PATH
-
-# Check if toolchain exists
-if [ ! -f "$CLANG_DIR/bin/clang-18" ]; then
-    echo "-----------------------------------------------"
-    echo "Toolchain not found! Downloading..."
-    echo "-----------------------------------------------"
-    rm -rf $CLANG_DIR
-    mkdir -p $CLANG_DIR
-    pushd toolchain/neutron_18 > /dev/null
-    bash <(curl -s "https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman") -S=05012024
-    echo "-----------------------------------------------"
-    echo "Patching toolchain..."
-    echo "-----------------------------------------------"
-    bash <(curl -s "https://raw.githubusercontent.com/Neutron-Toolchains/antman/main/antman") --patch=glibc
-    echo "-----------------------------------------------"
-    echo "Cleaning up..."
-    popd > /dev/null
-fi
-
 # Apply KSU patch for FBE support
 # Else it'll lose allowlist on reboot
 # Source patch: https://github.com/Unb0rn/android_kernel_samsung_exynos9820/commit/e424dac6ce3f99e128aaabb0711d69adf4079c77
@@ -83,6 +61,9 @@ popd > /dev/null
 if [[ "$CCACHE_OPTION" == "y" ]]; then
     CCACHE=ccache
 fi
+
+# Define toolchain variables
+PATH=$PWD/toolchain/clang-google/bin:$PATH
 
 MAKE_ARGS="
 LLVM=1 \

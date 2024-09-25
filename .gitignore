@@ -137,7 +137,9 @@ all.config
 *.kdev4
 
 # Clang toolchain
-/toolchain/neutron_18/
+/toolchain/clang-google/
+/toolchain/gcc_4.9/
+/toolchain/gcc_4.9_arm32/
 
 # Auxiliary build files
 build/out/
