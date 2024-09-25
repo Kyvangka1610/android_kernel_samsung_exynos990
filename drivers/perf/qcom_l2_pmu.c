@@ -586,6 +586,7 @@ static int l2_cache_event_init(struct perf_event *event)
 
 	hwc->idx = -1;
 	hwc->config_base = event->attr.config;
+	event->readable_on_cpus = CPU_MASK_ALL;
 
 	/*
 	 * Ensure all events are on the same cpu so all events are in the

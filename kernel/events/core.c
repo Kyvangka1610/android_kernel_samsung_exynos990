@@ -3833,6 +3833,9 @@ static int __perf_event_read_cpu(struct perf_event *event, int event_cpu)
 	if (event->group_caps & PERF_EV_CAP_READ_ACTIVE_PKG) {
 		int local_cpu = smp_processor_id();
 
+		if (cpumask_test_cpu(local_cpu, &event->readable_on_cpus))
+		return local_cpu;
+
 		event_pkg = topology_physical_package_id(event_cpu);
 		local_pkg = topology_physical_package_id(local_cpu);
 
