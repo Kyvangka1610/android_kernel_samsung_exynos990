@@ -18,8 +18,7 @@
  * http://www.gnu.org/licenses/gpl-2.0.html.
  *
  */
-#include <linux/sched/rt.h>
-#include <uapi/linux/sched/types.h>
+
 #include <device/mali_kbase_device_internal.h>
 #include <device/mali_kbase_device.h>
 #include <mali_kbase_hwaccess_instr.h>
@@ -298,13 +297,10 @@ void kbase_device_term(struct kbase_device *kbdev)
 	kbase_mem_halt(kbdev);
 }
 
-#define MALI_JD_THREAD_RT_PRIORITY 60
 int kbase_device_init(struct kbase_device *kbdev)
 {
 	int err = 0;
 	unsigned int i = 0;
-	static const struct sched_param param = { .sched_priority =
-					     MALI_JD_THREAD_RT_PRIORITY };
 
 	dev_info(kbdev->dev, "Kernel DDK version %s", MALI_RELEASE_NAME);
 
@@ -323,14 +319,6 @@ int kbase_device_init(struct kbase_device *kbdev)
 			}
 		}
 	}
-
-	if (sched_setscheduler(kbdev->job_done_worker_thread,
-				SCHED_FIFO, &param)) {
-		dev_warn(kbdev->dev, "mali_jd_thread not set to RT prio");
-	} else {
-		dev_info(kbdev->dev, "mali_jd_thread set to RT prio: %i",
-			 MALI_JD_THREAD_RT_PRIORITY);
- 	}
 
 	return err;
 }
