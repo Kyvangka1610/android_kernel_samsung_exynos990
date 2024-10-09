@@ -40,7 +40,6 @@
  */
 unsigned int sysctl_sched_latency			= 10000000ULL;
 unsigned int normalized_sysctl_sched_latency		= 10000000ULL;
->>>>>>> 12c198094f21 (sched/fair: Make scheduling period more efficient)
 
 /*
  * Enable/disable honoring sync flag in energy-aware wakeups.
